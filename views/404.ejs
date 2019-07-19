@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><%= status_code %> - <%= status_text %></title>
+    </head>
+    <body>
+        <h1><%= status_code %> - <%= status_text %></h1>
+        <ul>
+            <% messages.forEach(function(message) { %>
+                <li><strong><%= message.code %></strong>: <%= message.message %></li>
+            <% }) %>
+        </ul>
+    </body>
+</html>

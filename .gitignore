@@ -1,0 +1,9 @@
+.env
+node_modules/
+logs/
+yarn-error.log
+/bin
+/build
+/var
+/vendor
+phpunit.xml

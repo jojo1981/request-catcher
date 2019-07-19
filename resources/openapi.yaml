@@ -1,0 +1,474 @@
+openapi: 3.0.2
+info:
+  version: '1.0.0'
+  title: 'Request catcher'
+  description: 'Capture all requests and save them to a unique bin'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jojo1981/request-catcher/1.0.0
+  - description: 'Default development environment'
+    url: 'http://localhost:8080'
+paths:
+  '/api/request-bin':
+    get:
+      operationId: getAllBins
+      summary: Get all request bins
+      description: Get all request bins (a list of bin ids and request count for that bin)
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllBinsResponse"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      operationId: deleteAllBins
+      summary: Delete all request bins
+      description: Delete all request bins
+      responses:
+        203:
+          $ref: "#/components/responses/203"
+        500:
+          $ref: "#/components/responses/500"
+    post:
+      operationId: createBin
+      summary: Create a new request bin
+      description: Create a new request bin which respond as given
+      requestBody:
+        required: false
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/CreateBinRequest"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateBinResponse"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+  '/api/request-bin/{binId}':
+    get:
+      operationId: GetBin
+      summary: Get a request bin
+      description: Get the config and summary for a request bin identified by it's id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/response/get-bin-response.json#/GetBinResponse'
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      operationId: DeleteBin
+      summary: Delete a request bin
+      description: Delete a request bin identified by it's id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+      responses:
+        203:
+          $ref: "#/components/responses/203"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    patch:
+      operationId: UpdateBin
+      summary: Update a request bin
+      description: Update the config for a request bin identified by it's id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+      requestBody:
+        required: false
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/UpdateBinRequest"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateBinResponse"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  '/api/request-bin/{binId}/requests':
+    get:
+      operationId: getRequests
+      summary: Get all requests which are captured in the request bin
+      description: Get all requests which are captured in the request bin identified by it's id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRequestsResponse'
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      operationId: emptyBin
+      summary: Remove all requests which are captured in the request bin
+      description: Remove all requests which are captured in the request bin identified by it's id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+      responses:
+        203:
+          $ref: "#/components/responses/203"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  '/api/request-bin/{binId}/{requestId}':
+    get:
+      operationId: getRequest
+      summary: Get a single request from a request bin
+      description: Get a single request from a request bin identified by the bin id anf the reuest id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRequestResponse'
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      operationId: deleteRequest
+      summary: Delete a single request from a request bin
+      description: Delete a single request from a request bin identified by the bin id anf the reuest id
+      parameters:
+        - $ref: '#/components/parameters/BinId'
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        203:
+          $ref: "#/components/responses/203"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+components:
+  responses:
+    203:
+      description: No content
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  parameters:
+    BinId:
+      name: binId
+      in: path
+      description: The bin id
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    RequestId:
+      name: requestId
+      in: path
+      description: The request
+      required: true
+      schema:
+        $ref: '#/components/schemas/PositiveInteger'
+  schemas:
+    ErrorResponse:
+      description: The error response object
+      type: object
+      required:
+        - status_code
+        - status_text
+        - messages
+      properties:
+        status_code:
+          $ref: "#/components/schemas/HttpStatusCode"
+        status_text:
+          type: string
+        messages:
+          type: array
+          minLength: 1
+          items:
+            $ref: "#/components/schemas/Message"
+    GetAllBinsResponse:
+      description: The response of the get all bins call
+      type: object
+      required:
+        - bins
+        - bin_count
+      properties:
+        bins:
+          type: array
+          items:
+            $ref: "#/components/schemas/BinSummary"
+        bin_count:
+          $ref: "#/components/schemas/UnsignedInteger"
+    GetRequestsResponse:
+      description: The response of the get all requests of a bins call
+      type: object
+      required:
+        - requests
+        - count
+      properties:
+        request:
+          type: array
+          items:
+            $ref: "#/components/schemas/Request"
+        count:
+          $ref: "#/components/schemas/UnsignedInteger"
+    CreateBinRequest:
+      $ref: "#/components/schemas/RequestBinConfig"
+    CreateBinResponse:
+      description: The response of the create request bin call
+      type: object
+      properties:
+        bin_id:
+          $ref: "#/components/schemas/Uuid"
+        expire_at:
+          $ref: "#/components/schemas/IsoDateTime"
+        endpoint:
+          $ref: "#/components/schemas/Url"
+        config:
+          $ref: "#/components/schemas/RequestBinConfig"
+        request_count:
+          description: The number of requests captured in this bin
+          type: integer
+    UpdateBinRequest:
+      $ref: "#/components/schemas/RequestBinConfig"
+    UpdateBinResponse:
+      description: The response of the update request bin call
+      type: object
+      properties:
+        bin_id:
+          $ref: "#/components/schemas/Uuid"
+        expire_at:
+          $ref: "#/components/schemas/IsoDateTime"
+        endpoint:
+          $ref: "#/components/schemas/Url"
+        config:
+          $ref: "#/components/schemas/RequestBinConfig"
+        request_count:
+          description: The number of requests captured in this bin
+          type: integer
+    GetRequestResponse:
+      $ref: "#/components/schemas/Request"
+    Request:
+      description: A HTTP request object
+      type: object
+      required:
+        - id
+        - datetime
+        - ip
+        - ips
+        - protocol
+        - secure
+        - method
+        - uri
+        - path
+        - hostname
+        - headers
+        - raw_body
+        - parsed_body
+        - query
+      properties:
+        id:
+          $ref: "#/components/schemas/PositiveInteger"
+        datetime:
+          $ref: "#/components/schemas/IsoDateTime"
+        ip:
+          $ref: "#/components/schemas/IpAddress"
+        ips:
+          type: array
+          items:
+            $ref: "#/components/schemas/IpAddress"
+        protocol:
+          $ref: "#/components/schemas/HttpProtocol"
+        secure:
+          type: boolean
+        method:
+          $ref: "#/components/schemas/HttpMethod"
+        uri:
+          $ref: "#/components/schemas/Url"
+        path:
+          $ref: "#/components/schemas/Path"
+        hostname:
+          type: string
+        headers:
+          $ref: "#/components/schemas/Headers"
+        raw_body:
+          type: string
+        parsed_body:
+          type: object
+        query:
+          type: object
+    RequestBinConfig:
+      description: The config for the request bin
+      type: object
+      properties:
+        response:
+          description: The response specifications for the request bin
+          type: object
+          properties:
+            status_code:
+              $ref: "#/components/schemas/HttpStatusCode"
+            headers:
+              $ref: "#/components/schemas/Headers"
+            body:
+              description: The response body which will be used to response on incoming
+                requests
+              type: string
+        service:
+          type: object
+          description: The config for the request bin
+          properties:
+            delay:
+              description: The delay in milli seconds which must be use before responding
+                on an incoming request
+              type: integer
+            ttl:
+              description: The ttl in seconds the request bin must be available. Use 0
+                for unlimited
+              type: integer
+    BinSummary:
+      description: A bin summary object which contains a bin id and a request count
+      type: object
+      required:
+        - bin_id
+        - expire_at
+        - request_count
+      properties:
+        bin_id:
+          $ref: "#/components/schemas/Uuid"
+        expire_at:
+          $ref: "#/components/schemas/IsoDateTime"
+        request_count:
+          $ref: "#/components/schemas/UnsignedInteger"
+    Message:
+      description: A message object which can be an error or warning message
+      type: object
+      required:
+        - message
+      properties:
+        code:
+          description: The unique error or notification code for the message
+          type: integer
+        message:
+          description: The text which describes the problem
+          type: string
+        location:
+          type: string
+        field:
+          type: array
+          items:
+            type: string
+        types:
+          type: array
+          items:
+            type: string
+    Headers:
+      description: A sequence of HTTP header objects
+      type: array
+      items:
+        $ref: "#/components/schemas/Header"
+    Header:
+      description: A HTTP header
+      type: object
+      properties:
+        name:
+          description: The name of the header
+          type: string
+          minLength: 3
+        value:
+          description: The value of the header
+          type: string
+    PositiveInteger:
+      type: integer
+      minimum: 1
+    UnsignedInteger:
+      type: integer
+      minimum: 0
+    Uuid:
+      type: string
+      pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$"
+    IsoDateTime:
+      type: string
+      pattern: "^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]+)?(Z)?$"
+    Url:
+      type: string
+      pattern: "^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+    Path:
+      type: string
+      pattern: "^(.+)/([^/]+)$"
+    HttpStatusCode:
+      type: integer
+      minimum: 100
+      maximum: 599
+    IpAddress:
+      type: string
+      pattern: "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+    HttpProtocol:
+      type: string
+      enum:
+        - http
+        - https
+    HttpMethod:
+      type: string
+      enum:
+        - GET
+        - HEAD
+        - POST
+        - PUT
+        - DELETE
+        - CONNECT
+        - OPTIONS
+        - TRACE
