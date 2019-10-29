@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Request catcher - Capture all requests and save them to a unique bin",
   "main": "server.js",
-  "author": "Joost Nijhuis <joost.nijhuis@sqills.com>",
+  "author": "Joost Nijhuis <jnijhuis81@gmail.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "babel-node src/server.js",
     "dev": "nodemon --exec babel-node src/server.js"
