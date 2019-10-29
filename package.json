@@ -1,6 +1,6 @@
 {
   "name": "request-catcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Request catcher - Capture all requests and save them to a unique bin",
   "main": "server.js",
   "author": "Joost Nijhuis <jnijhuis81@gmail.com>",
