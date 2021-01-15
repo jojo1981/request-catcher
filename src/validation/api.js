@@ -1,7 +1,6 @@
 // https://github.com/hapijs/joi/blob/v16.0.0-rc2/API.md
 
 import Joi from '@hapi/joi'
-import moment from '../request-helper'
 
 const options = {
   allowUnknownBody: false,
@@ -11,7 +10,7 @@ const options = {
   allowUnknownCookies: true
 }
 
-const statusCode = Joi.number().integer().min(100).max(500)
+const statusCode = Joi.number().integer().min(100).max(599)
 
 const header = Joi.object({
   name: Joi.string().min(3),
@@ -32,37 +31,6 @@ const body = Joi.object().keys({
 
 const binId = Joi.string().length(36, 'utf8').regex(/^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$/)
 const requestId = Joi.number().integer().min(1)
-
-// const fields = [
-//   'id',
-//   'datetime',
-//   'ip',
-//   'ips',
-//   'protocol',
-//   'secure',
-//   'method',
-//   'uri',
-//   'path',
-//   'hostname',
-//   'headers',
-//   'raw_body',
-//   'parsed_body',
-//   'query',
-//   'cookies'
-// ]
-//
-// const operators = [
-//   'lt',
-//   'gt',
-//   'eq',
-//   '!ne',
-//   'lte',
-//   'gte',
-//   'not',
-//   'contains',
-//   'before',
-//   'after'
-// ]
 
 export const createBin = {
   options,
