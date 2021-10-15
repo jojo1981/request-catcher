@@ -9,4 +9,4 @@ It's an HTTP server with an embedded socket server for realtime updates.
 
 To start the server you can use the bash script: `./run.sh`
 
-API documentation can be found [here](https://htmlpreview.github.io/?https://github.com/jojo1981/request-catcher/blob/master/docs/index.html).
+API documentation can be found [here](https://jojo1981.github.io/request-catcher).
