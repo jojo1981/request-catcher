@@ -7,7 +7,7 @@ command -v curl >/dev/null 2>&1 || { echo >&2 "I require \`curl\` but it's not i
 command -v docker >/dev/null 2>&1 || { echo >&2 "I require \`docker\` but it's not installed. Aborting."; exit 1; }
 
 function docker_tag_exists() {
-    curl --silent -f -lSL https://index.docker.io/v1/repositories/$1/tags/$2 > /dev/null 2>&1
+    curl --silent -f -lSL https://index.docker.io/v1/repositories/"$1"/tags/"$2" > /dev/null 2>&1
 }
 
 git fetch --tags >/dev/null 2>&1 || { echo >&2 "Could NOT fetch git tags."; exit 1; }
