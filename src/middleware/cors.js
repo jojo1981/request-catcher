@@ -3,7 +3,7 @@ import config from '../config'
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if ('development' === config.global || !origin || config.cors.whitelist.indexOf(origin) !== -1) {
+    if ('development' === config.global.environment || !origin || config.cors.whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       const message = 'The CORS policy for this site does not allow access from the specified Origin.'
