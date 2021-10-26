@@ -1,5 +1,6 @@
 import uuidv4 from 'uuid/v4'
 import merge from 'merge'
+import moment from 'moment'
 import { eventEmitter } from '../socket/connection-handler'
 import * as eventTypes from '../socket/event-types'
 import { createRequestObject } from '../request-helper'
@@ -15,16 +16,16 @@ const data = {
 
 const createBin = async config => {
   const binId = uuidv4()
-  const binData = createBinConfigData(data.timers, config, binId, async () => await removeBin(binId))
+  const createdAt = moment.utc().toISOString()
+  const requestsCount = 0
+  const binData = createBinConfigData(data.timers, createdAt, requestsCount, config, binId, async () => await removeBin(binId))
   data.bins[binId] = {
     ...binData,
     request_count: 0
   }
   data.requests[binId] = []
 
-  eventEmitter.emit(eventTypes.EVENT_CREATED_BIN, {
-    bin_id: binId
-  })
+  eventEmitter.emit(eventTypes.EVENT_CREATED_BIN, { bin_id: binId })
   console.log(`Created bin: '${binId}'`)
 
   return data.bins[binId]
@@ -54,6 +55,8 @@ const getBin = async (binId) => {
       return null
     }
 
+    console.log(`Delete bin: '${binId}'`)
+
     return data.bins[binId]
   }
 
@@ -67,10 +70,9 @@ const updateBin = async (binId, newConfig) => {
   }
 
   newConfig = merge.recursive(true, currentBinData.config, newConfig)
-  const binData = createBinConfigData(data.timers, newConfig, binId, async () => await removeBin(binId))
+  const binData = createBinConfigData(data.timers, currentBinData.created_at, currentBinData.request_count, newConfig, binId, async () => await removeBin(binId))
   data.bins[binId] = {
-    ...binData,
-    request_count: currentBinData.request_count
+    ...binData
   }
 
   eventEmitter.emit(eventTypes.EVENT_UPDATED_BIN, {
@@ -128,6 +130,7 @@ const addRequest = async (binId, request) => {
 const getBins = async () => {
   const binsSummary = Object.keys(data.bins).map(binId => ({
     bin_id: binId,
+    created_at: data.bins[binId].created_at,
     expire_at: data.bins[binId].expire_at,
     request_count: data.bins[binId].request_count
   }))

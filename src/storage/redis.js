@@ -4,7 +4,8 @@ import merge from 'merge'
 import { eventEmitter } from '../socket/connection-handler'
 import * as eventTypes from '../socket/event-types'
 import { createRequestObject } from '../request-helper'
-import { createBinConfigData } from './helper'
+import { createBinConfigData, isBinExpired } from './helper'
+import moment from 'moment'
 
 const binTimers = {}
 let redisClient
@@ -26,7 +27,9 @@ const getFromRedis = async identifier => {
 
 const createBin = async config => {
   const binId = uuidv4()
-  const data = createBinConfigData(binTimers, config, binId, async () => await removeBin(binId))
+  const createdAt = moment.utc().toISOString()
+  const requestsCount = 0
+  const data = createBinConfigData(binTimers, createdAt, requestsCount, config, binId, async () => await removeBin(binId))
   setToRedis(getBinConfigId(data.bin_id), data)
   setToRedis(getBinRequestId(data.bin_id), [])
 
@@ -42,10 +45,10 @@ const createBin = async config => {
 }
 
 const updateBin = async (binId, config) => {
-  const bin = await getBin(binId);
-  if (bin) {
-    config = merge.recursive(true, bin.config, config)
-    let binData = createBinConfigData(binTimers, config, binId, async () => await removeBin(binId))
+  const currentBinData = await getBin(binId);
+  if (currentBinData) {
+    config = merge.recursive(true, currentBinData.config, config)
+    let binData = createBinConfigData(binTimers, currentBinData.created_at, currentBinData.request_count, config, binId, async () => await removeBin(binId))
     setToRedis(getBinConfigId(binId), binData)
 
     eventEmitter.emit(eventTypes.EVENT_UPDATED_BIN, {
@@ -55,7 +58,6 @@ const updateBin = async (binId, config) => {
 
     return {
       ...binData,
-      request_count: bin.request_count
     }
   }
 
@@ -72,6 +74,8 @@ const getBin = async binId => {
         return null
       }
       const requests = await getFromRedis(getBinRequestId(binId)) || []
+
+      console.log(`Delete bin: '${binId}'`)
 
       return {
         ...bin,
@@ -158,6 +162,7 @@ const getBins = async () => {
 
     return {
       bin_id: binId,
+      created_at: bin.created_at,
       expire_at: bin.expire_at,
       request_count: requests.length
     }

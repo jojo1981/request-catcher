@@ -65,7 +65,7 @@ export const addRequestsRoutes = apiRouter => {
     if (!storedRequest) {
       return next(new NotFoundError(`Request with identifier '${requestId}' does not exists`, errorCodes.REQUEST_NOT_EXISTS))
     }
-    storage.deleteRequest(binId, requestId)
+    await storage.deleteRequest(binId, requestId)
 
     return response.status(203).send('')
   })

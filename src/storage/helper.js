@@ -15,7 +15,7 @@ export const isBinExpired = bin => {
   return null !== bin.expire_at && moment().utc().isAfter(bin.expire_at)
 }
 
-export const createBinConfigData = (binTimers, config, binId, removeCallback) => {
+export const createBinConfigData = (binTimers, createdAt, requestsCount, config, binId, removeCallback) => {
 
   if (binTimers.hasOwnProperty(binId)) {
     console.log(`Remove old timer for bin: '${binId}`)
@@ -32,8 +32,10 @@ export const createBinConfigData = (binTimers, config, binId, removeCallback) =>
 
   return {
     bin_id: binId,
+    created_at: createdAt,
     expire_at: expiresAt,
     endpoint: createEndpointUrl(binId),
+    request_count: requestsCount,
     config
   }
 }

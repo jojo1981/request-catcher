@@ -1,11 +1,9 @@
-openapi: 3.0.2
+openapi: 3.0.3
 info:
-  version: '1.0.0'
+  version: '1.0.6'
   title: 'Request catcher'
   description: 'Capture all requests and save them to a unique bin'
 servers:
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/jojo1981/request-catcher/1.0.0
   - description: 'Default development environment'
     url: 'http://localhost:8080'
 paths:
@@ -66,7 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'schemas/response/get-bin-response.json#/GetBinResponse'
+                $ref: '#/components/schemas/GetBinResponse'
         400:
           $ref: "#/components/responses/400"
         404:
@@ -268,12 +266,31 @@ components:
           $ref: "#/components/schemas/UnsignedInteger"
     CreateBinRequest:
       $ref: "#/components/schemas/RequestBinConfig"
+    GetBinResponse:
+      description: The response of the create request bin call
+      type: object
+      properties:
+        bin_id:
+          $ref: "#/components/schemas/Uuid"
+        created_at:
+          $ref: "#/components/schemas/IsoDateTime"
+        expire_at:
+          $ref: "#/components/schemas/IsoDateTime"
+        endpoint:
+          $ref: "#/components/schemas/Url"
+        config:
+          $ref: "#/components/schemas/RequestBinConfig"
+        request_count:
+          description: The number of requests captured in this bin
+          type: integer
     CreateBinResponse:
       description: The response of the create request bin call
       type: object
       properties:
         bin_id:
           $ref: "#/components/schemas/Uuid"
+        created_at:
+          $ref: "#/components/schemas/IsoDateTime"
         expire_at:
           $ref: "#/components/schemas/IsoDateTime"
         endpoint:
@@ -291,6 +308,8 @@ components:
       properties:
         bin_id:
           $ref: "#/components/schemas/Uuid"
+        created_at:
+          $ref: "#/components/schemas/IsoDateTime"
         expire_at:
           $ref: "#/components/schemas/IsoDateTime"
         endpoint:
@@ -384,11 +403,14 @@ components:
       type: object
       required:
         - bin_id
+        - created_at
         - expire_at
         - request_count
       properties:
         bin_id:
           $ref: "#/components/schemas/Uuid"
+        created_at:
+          $ref: "#/components/schemas/IsoDateTime"
         expire_at:
           $ref: "#/components/schemas/IsoDateTime"
         request_count:
@@ -440,12 +462,13 @@ components:
     Uuid:
       type: string
       pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$"
+      format: uuid
     IsoDateTime:
       type: string
       pattern: "^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]+)?(Z)?$"
     Url:
       type: string
-      pattern: "^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$"
+      pattern: "^https?:\/\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
     Path:
       type: string
       pattern: "^(.+)\/([^\/]+)$"
