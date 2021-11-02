@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: '1.0.6'
+  version: '2.0.0'
   title: 'Request catcher'
   description: 'Capture all requests and save them to a unique bin'
 servers:
@@ -192,19 +192,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/BadRequestErrorResponse"
     404:
       description: Not found
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/GeneralErrorResponse"
     500:
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/GeneralErrorResponse"
   parameters:
     BinId:
       name: binId
@@ -221,8 +221,8 @@ components:
       schema:
         $ref: '#/components/schemas/PositiveInteger'
   schemas:
-    ErrorResponse:
-      description: The error response object
+    GeneralErrorResponse:
+      description: The error response object with messages
       type: object
       required:
         - status_code
@@ -238,6 +238,69 @@ components:
           minLength: 1
           items:
             $ref: "#/components/schemas/Message"
+    BadRequestErrorResponse:
+      description: The error response object with user error details
+      type: object
+      required:
+        - status_code
+        - status_text
+        - details
+      properties:
+        status_code:
+          $ref: "#/components/schemas/HttpStatusCode"
+        status_text:
+          type: string
+        details:
+          type: object
+          properties:
+            params:
+              $ref: "#/components/schemas/ValidationErrorItem"
+            headers:
+              $ref: "#/components/schemas/ValidationErrorItem"
+            query:
+              $ref: "#/components/schemas/ValidationErrorItem"
+            cookies:
+              $ref: "#/components/schemas/ValidationErrorItem"
+            signedCookies:
+              $ref: "#/components/schemas/ValidationErrorItem"
+            body:
+              $ref: "#/components/schemas/ValidationErrorItem"
+          oneOf:
+            - required: params]
+            - required: [ headers ]
+            - required: [ query ]
+            - required: [ cookies ]
+            - required: [ signedCookies ]
+            - required: [ body ]
+    ValidationErrorItem:
+      description: An input validation error item
+      type: object
+      required:
+        - message
+        - path
+        - type
+      properties:
+        message:
+          type: string
+        path:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+        context:
+          $ref: "#/components/schemas/ValidationErrorItemContext"
+    ValidationErrorItemContext:
+      description: An input validation error item context
+      type: object
+      additionalProperties: true
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
     GetAllBinsResponse:
       description: The response of the get all bins call
       type: object
@@ -427,16 +490,6 @@ components:
         message:
           description: The text which describes the problem
           type: string
-        location:
-          type: string
-        field:
-          type: array
-          items:
-            type: string
-        types:
-          type: array
-          items:
-            type: string
     Headers:
       description: A sequence of HTTP header objects
       type: array

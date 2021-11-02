@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true,
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "lib":["esnext"],
+    "types": ["node"],
+    "typeRoots": [
+      "./types/",
+      "./node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "types/**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+  ]
+}
