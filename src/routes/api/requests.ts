@@ -14,10 +14,7 @@ export const addRequestsRoutes = (apiRouter: Router) => {
     if (bin) {
       const requests = await storage.getRequests(binId)
       if (null !== requests) {
-        return response.status(200).json({
-          requests,
-          count: requests.length
-        })
+        return response.status(200).json(requests)
       }
     }
 
@@ -30,7 +27,7 @@ export const addRequestsRoutes = (apiRouter: Router) => {
     const bin = await storage.getBin(binId)
     if (bin) {
       await storage.clearBin(binId)
-      return response.status(203).send('')
+      return response.status(204).send('')
     }
 
     return next(new NotFoundError(`Request bin with identifier '${binId}' does not exists`, errorCodes.REQUEST_BIN_NOT_EXISTS))
@@ -68,7 +65,7 @@ export const addRequestsRoutes = (apiRouter: Router) => {
     }
     await storage.deleteRequest(binId, requestId)
 
-    return response.status(203).send('')
+    return response.status(204).send('')
   })
 
 }

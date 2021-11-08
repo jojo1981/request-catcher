@@ -11,19 +11,22 @@ RUN apk update && \
     bash && \
     apk upgrade
 
+COPY ./public /data/public
 COPY ./src /data/src
+COPY ./types /data/types
+COPY ./views /data/views
 COPY ./.babelrc /data/.babelrc
-COPY ./.eslintignore /data/.eslintignore
-COPY ./.eslintrc.json /data/.eslintrc.json
+COPY ./.prettierrc.json /data/.prettierrc.json
 COPY ./.yarnclean /data/.yarnclean
 COPY ./package.json /data/package.json
+COPY ./tsconfig.json /data/tsconfig.json
+COPY ./tslint.json /data/tslint.json
 COPY ./yarn.lock /data/yarn.lock
-COPY ./public /data/public
-COPY ./views /data/views
 
 WORKDIR /data
 
 RUN yarn install && \
-    yarn autoclean --force
+    yarn autoclean --force && \
+    yarn build
 
-ENTRYPOINT ["yarn", "start"]
+ENTRYPOINT ["yarn", "server"]

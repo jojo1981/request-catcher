@@ -61,7 +61,7 @@ export const addBinRoutes = (apiRouter: Router) => {
     const bin = await storage.getBin(binId)
     if (bin) {
       await storage.removeBin(binId)
-      return response.status(203).send('')
+      return response.status(204).send('')
     }
 
     return next(new NotFoundError(`Request bin with identifier '${binId}' does not exists`, errorCodes.REQUEST_BIN_NOT_EXISTS))

@@ -26,8 +26,8 @@ paths:
       summary: Delete all request bins
       description: Delete all request bins
       responses:
-        203:
-          $ref: "#/components/responses/203"
+        204:
+          $ref: "#/components/responses/204"
         500:
           $ref: "#/components/responses/500"
     post:
@@ -78,8 +78,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/BinId'
       responses:
-        203:
-          $ref: "#/components/responses/203"
+        204:
+          $ref: "#/components/responses/204"
         400:
           $ref: "#/components/responses/400"
         404:
@@ -138,8 +138,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/BinId'
       responses:
-        203:
-          $ref: "#/components/responses/203"
+        204:
+          $ref: "#/components/responses/204"
         400:
           $ref: "#/components/responses/400"
         404:
@@ -175,8 +175,8 @@ paths:
         - $ref: '#/components/parameters/BinId'
         - $ref: '#/components/parameters/RequestId'
       responses:
-        203:
-          $ref: "#/components/responses/203"
+        204:
+          $ref: "#/components/responses/204"
         400:
           $ref: "#/components/responses/400"
         404:
@@ -185,7 +185,7 @@ paths:
           $ref: "#/components/responses/500"
 components:
   responses:
-    203:
+    204:
       description: No content
     400:
       description: Bad request
@@ -266,7 +266,7 @@ components:
             body:
               $ref: "#/components/schemas/ValidationErrorItem"
           oneOf:
-            - required: params]
+            - required: [ params]
             - required: [ headers ]
             - required: [ query ]
             - required: [ cookies ]
@@ -306,13 +306,13 @@ components:
       type: object
       required:
         - bins
-        - bin_count
+        - count
       properties:
         bins:
           type: array
           items:
             $ref: "#/components/schemas/BinSummary"
-        bin_count:
+        count:
           $ref: "#/components/schemas/UnsignedInteger"
     GetRequestsResponse:
       description: The response of the get all requests of a bins call

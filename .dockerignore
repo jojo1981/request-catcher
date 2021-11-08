@@ -1,8 +1,12 @@
 .git
 /.gitignore
 Dockerfile
-bin
-build
+node_modules
+dist
+docs
+logs
 var
 vendor
+build.sh
+generate-docs.sh
 run.sh

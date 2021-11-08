@@ -11,7 +11,7 @@ export const addBinsRoutes = (apiRouter: Router) => {
   // Delete all bins
   apiRouter.delete('/request-bin', async (_request, response) => {
     await storage.removeAllBins()
-    return response.status(203).send()
+    return response.status(204).send()
   })
 
 }

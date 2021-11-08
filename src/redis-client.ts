@@ -1,6 +1,5 @@
 import redis from 'redis'
 import asyncRedis from 'async-redis'
-import config from './config'
 
 // Because the type definitions from the async-redis package are wrong
 export interface AsyncRedisClient {
@@ -11,13 +10,18 @@ export interface AsyncRedisClient {
   keys(pattern: string): Promise<string[]>
 }
 
-export const createRedisClient = (): AsyncRedisClient => {
+export interface RedisConfig {
+  host: string
+  port: number
+}
 
-  console.log(`Connect to redis server at host: ${config.redis.host} on port: ${config.redis.port}`)
+export const createRedisClient = (config: RedisConfig): AsyncRedisClient => {
+
+  console.log(`Connect to redis server at host: ${config.host} on port: ${config.port}`)
 
   const client = redis.createClient({
-    host: config.redis.host,
-    port: config.redis.port
+    host: config.host,
+    port: config.port
   })
   client.on("error", error => console.log(`Error ${error}`))
   client.del

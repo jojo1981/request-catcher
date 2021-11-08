@@ -26,6 +26,11 @@ declare namespace RequestCatcher {
         cookies: any
     }
 
+    interface Requests {
+        requests: Request[]
+        count: number
+    }
+
     interface BinConfig {
         response: {
             status_code: number
@@ -45,7 +50,13 @@ declare namespace RequestCatcher {
         endpoint: string
         request_count: number
         config: BinConfig
-        user_id?: Uuid
+    }
+
+    type BinSummary = Omit<Bin, "endpoint" | "config">
+
+    interface Bins {
+        bins: BinSummary[],
+        count: number
     }
 
     type InputBinConfig = RecursivePartial<RequestCatcher.BinConfig>

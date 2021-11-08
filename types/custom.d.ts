@@ -1,12 +1,10 @@
 declare namespace Express {
+
     export interface Request {
         rawBody: string
     }
-}
 
-// type RecursivePartial<T> = {
-//     [P in keyof T]?: RecursivePartial<T[P]>;
-// };
+}
 
 type RecursivePartial<T> = {
     [P in keyof T]?:

@@ -7,9 +7,10 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "rimraf dist && mkdir -p ./dist && cp -a ./src/i18n ./dist && yarn start:build_nodemon",
+    "start": "yarn prepare && yarn start:build_nodemon",
+    "prepare": "rimraf dist && mkdir -p ./dist && cp -a ./src/i18n ./dist",
     "start:build_nodemon": "concurrently --names \"build,nodemon\" \"yarn build --watch\" \"yarn nodemon\"",
-    "build": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js,.jsx\"",
+    "build": "yarn prepare && babel ./src --out-dir dist --extensions \".ts,.tsx,.js,.jsx\"",
     "nodemon": "wait-on dist/server.js && NODE_ENV=development nodemon dist/server.js",
     "tsc": "tsc --isolatedModules false",
     "lint": "tslint -c tslint.json --fix --format verbose  src/**/*.{ts,tsx}",

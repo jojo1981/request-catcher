@@ -23,7 +23,7 @@
     "resolveJsonModule": true,
     "jsx": "preserve",
     "lib":["esnext"],
-    "types": ["node"],
+    "types": ["node", "express"],
     "typeRoots": [
       "./types/",
       "./node_modules/@types"

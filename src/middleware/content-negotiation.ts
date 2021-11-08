@@ -13,13 +13,13 @@ export default (config: { contentTypes: any[]; acceptTypes: any[] }): RequestHan
 
     return (request, _response, next) => {
 
-        const contentType = request.get('Content-Type')
+        const contentType = request.get('Content-Type') || 'application/json'
         if (!config.contentTypes.includes(contentType)) {
             return next(new NotFoundError(`Invalid 'Content-Type' header: '${contentType}'. Expect on of [${config.contentTypes.join(', ')}]`, errorCodes.INVALID_CONTENT_TYPE_HEADER))
         }
 
-        const acceptType = request.get('Accept')
-        if (!config.acceptTypes.includes(acceptType)) {
+        const acceptType = request.get('Accept') || 'application/json'
+        if ('*/*' !== acceptType && 'application/*' !== acceptType && !config.acceptTypes.includes(acceptType)) {
             return next(new NotFoundError(`Invalid 'Accept' header: '${acceptType}'. Expect on of [${config.acceptTypes.join(', ')}]`, errorCodes.INVALID_ACCEPT_HEADER))
         }
 
