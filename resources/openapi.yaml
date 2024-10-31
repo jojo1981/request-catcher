@@ -294,6 +294,10 @@ components:
       description: An input validation error item context
       type: object
       additionalProperties: true
+      required:
+        - key
+        - label
+        - value
       properties:
         key:
           type: string
@@ -332,6 +336,13 @@ components:
     GetBinResponse:
       description: The response of the create request bin call
       type: object
+      required:
+        - bin_id
+        - created_at
+        - expire_at
+        - endpoint
+        - config
+        - request_count
       properties:
         bin_id:
           $ref: "#/components/schemas/Uuid"
@@ -344,11 +355,17 @@ components:
         config:
           $ref: "#/components/schemas/RequestBinConfig"
         request_count:
-          description: The number of requests captured in this bin
-          type: integer
+          $ref: "#/components/schemas/UnsignedInteger"
     CreateBinResponse:
       description: The response of the create request bin call
       type: object
+      required:
+        - bin_id
+        - created_at
+        - expire_at
+        - endpoint
+        - config
+        - request_count
       properties:
         bin_id:
           $ref: "#/components/schemas/Uuid"
@@ -361,13 +378,19 @@ components:
         config:
           $ref: "#/components/schemas/RequestBinConfig"
         request_count:
-          description: The number of requests captured in this bin
-          type: integer
+          $ref: "#/components/schemas/UnsignedInteger"
     UpdateBinRequest:
       $ref: "#/components/schemas/RequestBinConfig"
     UpdateBinResponse:
       description: The response of the update request bin call
       type: object
+      required:
+        - bin_id
+        - created_at
+        - expire_at
+        - endpoint
+        - config
+        - request_count
       properties:
         bin_id:
           $ref: "#/components/schemas/Uuid"
@@ -380,8 +403,7 @@ components:
         config:
           $ref: "#/components/schemas/RequestBinConfig"
         request_count:
-          description: The number of requests captured in this bin
-          type: integer
+          $ref: "#/components/schemas/UnsignedInteger"
     GetRequestResponse:
       $ref: "#/components/schemas/Request"
     Request:
@@ -514,23 +536,26 @@ components:
       minimum: 0
     Uuid:
       type: string
-      pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$"
       format: uuid
+      pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$"
     IsoDateTime:
       type: string
+      format: date-time
       pattern: "^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(.[0-9]+)?(Z)?$"
     Url:
       type: string
-      pattern: "^https?:\/\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+      format: uri
+      pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
     Path:
       type: string
-      pattern: "^(.+)\/([^\/]+)$"
+      pattern: ^(.+)\/([^\/]+)$
     HttpStatusCode:
       type: integer
       minimum: 100
       maximum: 599
     IpAddress:
       type: string
+      format: ipv4
       pattern: "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
     HttpProtocol:
       type: string
