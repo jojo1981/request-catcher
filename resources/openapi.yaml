@@ -325,7 +325,7 @@ components:
         - requests
         - count
       properties:
-        request:
+        requests:
           type: array
           items:
             $ref: "#/components/schemas/Request"
